@@ -19,7 +19,7 @@ export default function Home() {
       const data = await response.json();
       setStatusData(data);
       setError(null);
-    } catch (err) {
+    } catch {
       setError('Failed to load status');
     } finally {
       setLoading(false);
