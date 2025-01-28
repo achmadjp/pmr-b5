@@ -80,7 +80,14 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <span className="text-gray-600">Last Updated:</span>
             <span className="text-gray-800">
-              {statusData?.lastUpdated ? new Date(statusData.lastUpdated).toLocaleString() : 'Never'}
+              {statusData?.lastUpdated ? new Date(statusData.lastUpdated).toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+              }).replace(',', '') : 'Never'}
             </span>
           </div>
         </div>
