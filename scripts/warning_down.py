@@ -39,7 +39,7 @@ def send_delay_warning_email(last_updated_time):
             html=f"""
                 <h1>PMR B5 - Electricity is DOWN</h1>
                 <p>The electricity is currently DOWN in PMR B5.</p>
-                <p>Last update was at: {last_updated_time.strftime('%Y-%m-%d %H:%M:%S %Z')}</p>
+                <p>Last update was at: {last_updated_time.astimezone(pytz.timezone('Asia/Jakarta')).strftime('%Y-%m-%d %H:%M:%S %Z')}</p>
                 <p>Please be aware that:</p>
                 <ul>
                     <li>The building might be experiencing a power outage</li>

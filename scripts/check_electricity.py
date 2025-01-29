@@ -41,7 +41,7 @@ def send_delay_warning_email(last_updated_time):
             html=f"""
                 <h1>PMR B5 - Electricity Status Update Delay Warning</h1>
                 <p>The electricity status hasn't been updated for {time_difference_hours:.1f} hours.</p>
-                <p>Last update was at: {last_updated_time.strftime('%Y-%m-%d %H:%M:%S %Z')}</p>
+                <p>Last update was at: {last_updated_time.astimezone(pytz.timezone('Asia/Jakarta')).strftime('%Y-%m-%d %H:%M:%S %Z')}</p>
                 <p>This might indicate:</p>
                 <ul>
                     <li>The Raspberry Pi has lost connection</li>
