@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 import fetch from 'node-fetch';
 
 // Initialize Resend with API key from environment variable
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY ?? '');
 
 interface ElectricityStatus {
   isOn: boolean;
