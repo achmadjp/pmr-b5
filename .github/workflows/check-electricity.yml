@@ -13,19 +13,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          node-version: '20'
-          cache: 'npm'
+          python-version: '3.11'
+          cache: 'pip'
 
       - name: Install dependencies
-        run: npm install
-
-      - name: Compile TypeScript
-        run: npx tsc --project scripts.tsconfig.json
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests resend
 
       - name: Run check script
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-        run: node dist/scripts/check-electricity.js 
+        run: python scripts/check_electricity.py 
