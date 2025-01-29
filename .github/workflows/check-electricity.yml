@@ -1,0 +1,31 @@
+name: Check Electricity Status
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Run every hour
+  workflow_dispatch:      # Allow manual trigger
+
+jobs:
+  check-electricity:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install ts-node globally
+        run: npm install -g ts-node
+
+      - name: Run electricity check script
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: ts-node src/scripts/check-electricity.ts 

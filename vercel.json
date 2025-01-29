@@ -5,9 +5,5 @@
       "src": "package.json",
       "use": "@vercel/next"
     }
-  ],
-  "crons": [{
-    "path": "/api/cron/check-electricity",
-    "schedule": "0 * * * *"
-  }]
+  ]
 } 
