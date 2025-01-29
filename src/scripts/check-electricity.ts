@@ -4,13 +4,18 @@ import fetch from 'node-fetch';
 // Initialize Resend with API key from environment variable
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+interface ElectricityStatus {
+  isOn: boolean;
+  lastUpdated: string;
+}
+
 async function getElectricityStatus() {
   try {
     const response = await fetch('https://pmr-b5.vercel.app/api/electricity-status');
     if (!response.ok) {
       throw new Error('Failed to fetch electricity status');
     }
-    const data = await response.json();
+    const data = await response.json() as ElectricityStatus;
     return {
       isOn: data.isOn,
       lastUpdated: new Date(data.lastUpdated),
