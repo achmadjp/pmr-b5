@@ -52,7 +52,7 @@ try {
     console.log('Firebase Admin initialized successfully');
     
     // Test Firestore connection
-    const db = getFirestore();
+    getFirestore();
     console.log('Firestore instance created');
   } else {
     console.log('Firebase Admin already initialized');
