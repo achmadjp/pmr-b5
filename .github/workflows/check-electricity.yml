@@ -28,4 +28,5 @@ jobs:
       - name: Run electricity check script
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-        run: ts-node src/scripts/check-electricity.ts 
+          NODE_OPTIONS: --experimental-specifier-resolution=node
+        run: ts-node --esm src/scripts/check-electricity.ts 
