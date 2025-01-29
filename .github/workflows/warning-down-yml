@@ -1,0 +1,30 @@
+name: Warning Down
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:      # Allow manual trigger
+
+jobs:
+  warning-down:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+
+      - name: Run warning down script
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: python scripts/warning_down.py 

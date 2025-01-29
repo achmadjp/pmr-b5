@@ -31,24 +31,22 @@ def get_electricity_status():
 
 
 def send_delay_warning_email(last_updated_time):
-    time_difference_hours = (datetime.now() - last_updated_time).total_seconds() / 3600
-
     try:
         response = resend.send_email(
             sender="PMR B5 <onboarding@resend.dev>",
             to="achmadjeihan@gmail.com",
-            subject="PMR B5 - Electricity Status Update Delay Warning",
+            subject="PMR B5 - Electricity is DOWN",
             html=f"""
-                <h1>PMR B5 - Electricity Status Update Delay Warning</h1>
-                <p>The electricity status hasn't been updated for {time_difference_hours:.1f} hours.</p>
+                <h1>PMR B5 - Electricity is DOWN</h1>
+                <p>The electricity is currently DOWN in PMR B5.</p>
                 <p>Last update was at: {last_updated_time.strftime('%Y-%m-%d %H:%M:%S %Z')}</p>
-                <p>This might indicate:</p>
+                <p>Please be aware that:</p>
                 <ul>
-                    <li>The Raspberry Pi has lost connection</li>
-                    <li>The monitoring service is not running</li>
-                    <li>There might be an issue with the sensors</li>
+                    <li>The building might be experiencing a power outage</li>
+                    <li>Backup power systems (if any) might be in use</li>
+                    <li>Some services might be affected</li>
                 </ul>
-                <p>Please check the Raspberry Pi connection and the monitoring service.</p>
+                <p>Please take necessary precautions and monitor the situation.</p>
             """,
         )
         print("Warning email sent:", response)
@@ -70,13 +68,13 @@ def main():
 
         print(f"Time since last update: {time_difference_minutes:.2f} minutes")
 
-        # If last update is older than 10 minutes but less than 1.5 hour
-        if 10 < time_difference_minutes < 90:
-            print("Sending warning email...")
+        # If last update is less than 10 minutes and the electricity is off, send warning email
+        if time_difference_minutes < 10 and not status["is_on"]:
+            print("Electricity is DOWN. Sending warning email...")
             send_delay_warning_email(status["last_updated"])
             print("Warning email sent successfully")
         else:
-            print("No action needed")
+            print("Electricity is UP. No action needed")
 
     except Exception as e:
         print(f"Script error: {e}", file=sys.stderr)
