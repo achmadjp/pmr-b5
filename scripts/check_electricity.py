@@ -2,6 +2,7 @@ import os
 import sys
 from datetime import datetime
 
+import pytz
 import requests
 from resend import Resend
 
@@ -64,7 +65,7 @@ def main():
             print("Could not fetch electricity status", file=sys.stderr)
             sys.exit(1)
 
-        now = datetime.now()
+        now = datetime.now(pytz.UTC)
         time_difference_minutes = (now - status["last_updated"]).total_seconds() / 60
 
         print(f"Time since last update: {time_difference_minutes:.2f} minutes")
