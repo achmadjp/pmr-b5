@@ -36,7 +36,7 @@ def send_delay_warning_email(last_updated_time):
     try:
         response = resend.send_email(
             sender="PMR B5 <onboarding@resend.dev>",
-            to="achmadjeihan@gmail.com",
+            to=["achmadjeihan@gmail.com", "cahyanilaili@gmail.com"],
             subject="PMR B5 - Electricity Status Update Delay Warning",
             html=f"""
                 <h1>PMR B5 - Electricity Status Update Delay Warning</h1>
