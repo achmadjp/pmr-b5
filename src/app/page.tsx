@@ -44,9 +44,6 @@ export default function Home() {
 
   useEffect(() => {
     fetchStatus();
-    // Refresh status every 30 seconds
-    const interval = setInterval(fetchStatus, 30000);
-    return () => clearInterval(interval);
   }, []);
 
   const getStatusColor = (status: string) => {
