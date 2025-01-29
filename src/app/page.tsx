@@ -7,17 +7,33 @@ interface StatusData {
   lastUpdated: string;
 }
 
+interface HistoryItem {
+  id: string;
+  status: string;
+  lastUpdated: string;
+  createdAt: string;
+}
+
 export default function Home() {
   const [statusData, setStatusData] = useState<StatusData | null>(null);
+  const [historyData, setHistoryData] = useState<HistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchStatus = async () => {
     try {
-      const response = await fetch('/api/electricity-status');
-      if (!response.ok) throw new Error('Failed to fetch status');
-      const data = await response.json();
-      setStatusData(data);
+      const [currentResponse, historyResponse] = await Promise.all([
+        fetch('/api/electricity-status?type=current'),
+        fetch('/api/electricity-status?type=history&limit=20')
+      ]);
+
+      if (!currentResponse.ok || !historyResponse.ok) throw new Error('Failed to fetch status');
+      
+      const currentData = await currentResponse.json();
+      const historyData = await historyResponse.json();
+      
+      setStatusData(currentData);
+      setHistoryData(historyData.history);
       setError(null);
     } catch {
       setError('Failed to load status');
@@ -98,6 +114,48 @@ export default function Home() {
         >
           Refresh Status
         </button>
+
+        {/* History Section */}
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-4">Status History</h2>
+          <div className="border rounded-lg overflow-hidden">
+            <div className="max-h-[400px] overflow-y-auto">
+              {historyData.length === 0 ? (
+                <p className="text-center text-gray-500 py-4">No history available</p>
+              ) : (
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50 sticky top-0">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {historyData.map((item) => (
+                      <tr key={item.id}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`px-3 py-1 rounded-full text-white text-sm font-semibold ${getStatusColor(item.status)}`}>
+                            {item.status.toUpperCase()}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {new Date(item.createdAt).toLocaleDateString('en-GB', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric',
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                          }).replace(',', '')}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   );
